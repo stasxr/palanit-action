@@ -1,5 +1,5 @@
 name: "PALANIT Security Check"
-description: "Passive web-security scan (TLS, security headers, cookies, email auth, exposed paths & more). Fails the build on issues — no attack traffic."
+description: "Passive web-security scan: TLS, headers, cookies, email auth, exposed paths. Fails CI; no attack traffic."
 author: "PALANIT"
 branding:
   icon: "shield"
