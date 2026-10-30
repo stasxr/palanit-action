@@ -1,0 +1,48 @@
+name: "PALANIT Security Check"
+description: "Passive web-security scan (TLS, security headers, cookies, email auth, exposed paths & more). Fails the build on issues — no attack traffic."
+author: "PALANIT"
+branding:
+  icon: "shield"
+  color: "yellow"
+
+inputs:
+  url:
+    description: "The URL or domain to scan (e.g. https://example.com)."
+    required: true
+  fail-on:
+    description: "Fail the build on a FAIL finding at this severity or worse: high | medium | low | never."
+    required: false
+    default: "high"
+  min-grade:
+    description: "Also fail when the overall letter grade is below this: A+ | A | B | C | D | F | none."
+    required: false
+    default: "none"
+  api:
+    description: "PALANIT API base URL (override only if self-hosting)."
+    required: false
+    default: "https://palanit.com"
+  api-key:
+    description: "Optional PALANIT API key (plnt_live_…). Lifts the anonymous per-IP rate limit and applies your plan's daily quota. Store it as a repo/org secret, never inline."
+    required: false
+    default: ""
+
+outputs:
+  grade:
+    description: "The overall letter grade (A+ … F)."
+    value: ${{ steps.scan.outputs.grade }}
+  score:
+    description: "The 0–100 score."
+    value: ${{ steps.scan.outputs.score }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: scan
+      shell: bash
+      run: python3 "${{ github.action_path }}/palanit_gate.py"
+      env:
+        PALANIT_URL: ${{ inputs.url }}
+        PALANIT_FAIL_ON: ${{ inputs.fail-on }}
+        PALANIT_MIN_GRADE: ${{ inputs.min-grade }}
+        PALANIT_API: ${{ inputs.api }}
+        PALANIT_API_KEY: ${{ inputs.api-key }}

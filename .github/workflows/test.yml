@@ -1,0 +1,14 @@
+name: self-test
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run the action against a stable target (non-blocking)
+        uses: ./
+        with:
+          url: https://example.com
+          fail-on: never
